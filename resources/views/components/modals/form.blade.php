@@ -28,7 +28,7 @@
       @csrf
 
       @if (! in_array($method, ['GET', 'POST']))
-          @method($method)
+        @method($method)
       @endif
       <!--Title-->
       <div class="flex justify-between items-center pb-3">

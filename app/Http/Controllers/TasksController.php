@@ -4,30 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Difficulty;
 use App\Project;
+use App\Task;
 use App\Todo;
 use Illuminate\Http\Request;
 
-class TodosController extends Controller
+class TasksController extends Controller
 {
-    public function index(Project $project) {
-      $todos = Todo::with('tasks')->where('project_id', $project->id)->get();
+    public function index(Project $project, Todo $todo) {
+      $tasks = Task::where('todo_id', $todo->id)->get();
 
       $difficulties = Difficulty::all();
 
-      return view('todos.index', compact('todos', 'difficulties', 'project'));
+      return view('tasks.index', compact('tasks', 'project', 'todo', 'difficulties'));
     }
 
-    public function store(Request $request, Project $project) {
+    public function store(Request $request, Project $project, Todo $todo) {
       $this->validator($request);
 
-      $todo = $project->todos()->create([
+      $tasks = $todo->tasks()->create([
         'description' => $request->description,
         'difficulty' => $request->difficulty,
         'requested_by' => $request->requested_by,
         'deadline' => $request->deadline,
       ]);
 
-      return back()->with(['message' => $todo->description . ' Successfully Created']);
+      if(! is_null($todo->done)) {
+        $todo->update(['done' => null]);
+      }
+
+      return back()->with(['message' => $tasks->description . ' Successfully Created']);
     }
 
     protected function validator($request) {

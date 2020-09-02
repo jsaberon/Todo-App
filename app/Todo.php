@@ -11,6 +11,10 @@ class Todo extends Model
       'deadline' => 'datetime',
     ];
 
+    public function tasks() {
+      return $this->hasMany(Task::class);
+    }
+
     public function project() {
       return $this->belongsTo(Project::class);
     }

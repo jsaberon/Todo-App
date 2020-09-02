@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class ProjectsController extends Controller
 {
     public function index() {
-      $projects = Project::where('user_id', auth()->id())->get();
+      $projects = Project::with(['todos', 'tasks'])->where('user_id', auth()->id())->get();
 
       return view('projects.index', compact('projects'));
     }
